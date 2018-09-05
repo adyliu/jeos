@@ -11,7 +11,7 @@ public class RequiredAuth {
 
     private List<Key> keys;
 
-    private String threshold;
+    private Long threshold;
 
     private List<Wait> waits;
 }
