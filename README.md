@@ -1,5 +1,7 @@
 # java client for EOS block chain
 
+> eosio java sdk with eos rpc-api
+
 ## Maven dependency
 
 ```xml
