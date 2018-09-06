@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -34,6 +35,7 @@ import io.jafka.jeos.core.response.history.action.Actions;
 import io.jafka.jeos.core.response.history.controlledaccounts.ControlledAccounts;
 import io.jafka.jeos.core.response.history.keyaccounts.KeyAccounts;
 import io.jafka.jeos.core.response.history.transaction.Transaction;
+import io.jafka.jeos.util.KeyUtil;
 
 public class EosApiRestClientImpl implements EosApi {
 
@@ -256,4 +258,11 @@ public class EosApiRestClientImpl implements EosApi {
     public ObjectMapper getObjectMapper() {
         return EosApiServiceGenerator.getMapper();
     }
+    
+    // ------------------------------------------------------------------------------
+    //                                                                              //
+    //                                  LOCAL API                                   //
+    //                                                                              //
+    // ------------------------------------------------------------------------------
+    
 }

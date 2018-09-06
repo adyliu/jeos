@@ -1,6 +1,7 @@
 package io.jafka.jeos;
 
 import io.jafka.jeos.impl.EosApiRestClientImpl;
+import io.jafka.jeos.impl.LocalApiImpl;
 
 public abstract class EosApiFactory {
 
@@ -11,5 +12,8 @@ public abstract class EosApiFactory {
     public static EosApi create(String walletBaseUrl, String chainBaseUrl, String historyBaseUrl) {
         return new EosApiRestClientImpl(walletBaseUrl, chainBaseUrl, historyBaseUrl);
     }
-
+    
+    public static LocalApi createLocalApi() {
+        return new LocalApiImpl();
+    }
 }
