@@ -1,10 +1,11 @@
 package io.jafka.jeos.util;
 
+import java.io.ByteArrayOutputStream;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.text.NumberFormat;
 import java.util.stream.IntStream;
+
 
 
 public class ByteUtils {
@@ -159,22 +160,89 @@ public class ByteUtils {
 		return key;
 	}
 
-	/*
-	public static byte[] writerKey(String key) {
-		io.eblock.eos4j.utils.ByteBuffer bf = new io.eblock.eos4j.utils.ByteBuffer();
-		bf.concat(writerUnit32("1"));
-		bf.concat(writerVarint32("1"));
-		bf.concat(writerVarint32("0"));
-		bf.concat(writerKeyStr(key));
-		bf.concat(writerUnit16("1"));
-		bf.concat(writerVarint32("0"));
-		bf.concat(writerVarint32("0"));
-		return bf.getBuffer();
-	}
-	*/
+    public static byte[] writerKey(String key) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try {
+            baos.write(writerUnit32("1"));
+            baos.write(writerVarint32("1"));
+            baos.write(writerVarint32("0"));
+            baos.write(writerKeyStr(key));
+            baos.write(writerUnit16("1"));
+            baos.write(writerVarint32("0"));
+            baos.write(writerVarint32("0"));
+            return baos.toByteArray();
+        } catch (Exception ex) {
+            throw new RuntimeException(ex.getMessage(), ex);
+        }
+    }
 	
 	public static byte[] writeUint64(String v) {
 		return ByteBuffer.allocate(Long.BYTES).order(ByteOrder.LITTLE_ENDIAN).putLong(Long.parseLong(v)).array();
 	}
+	public static byte[] writeName(String v) {
+        StringBuffer bitstr = new StringBuffer();
+        for (int i = 0; i <= 12; i++) {
+            int c = i < v.length() ? ByteUtils.charidx(v.charAt(i)) : 0;
+            int bitlen = i < 12 ? 5 : 4;
+            String bits = Integer.toBinaryString(c);
+            if (bits.length() > bitlen) {
+                throw new RuntimeException( "Invalid name " + v);
+            }
+            StringBuffer sb = new StringBuffer("");
+            for (int j = 0; j < bitlen - bits.length(); j++) {
+                sb.append("0");
+            }
+            bits = sb + bits;
+            bitstr.append(bits);
+        }
+        BigInteger lv = new BigInteger(bitstr.toString(), 2);
+        StringBuffer leHex = new StringBuffer();
+        int bytes[] = ByteUtils.LongToBytes(lv.longValue());
+        for (int i = 0; i < bytes.length; i++) {
+            int b = bytes[i];
+            String n = Integer.toHexString(b);
+            leHex.append(n.length() == 1 ? "0" : "").append(n);
+        }
+        BigInteger ulName = new BigInteger(leHex.toString(), 16);
+        return ByteBuffer.allocate(Long.BYTES).order(ByteOrder.LITTLE_ENDIAN).putLong(ulName.longValue()).array();
+    }
+	public static byte[] writerAsset(String v) {
+        String _value[] = v.split(" ");
+        String amount = _value[0];
+        if(amount==null || !amount.matches("^[0-9]+(.[0-9]+)?$")){
+            throw new RuntimeException("amount error");
+        }
+        String sym = _value[1];
+        String precision = sym.split(",")[0];
+        String symbol = sym.split(",")[1].split("@")[0];
+        String[] part = amount.split("[.]");
 
+        int pad = Integer.parseInt(precision);
+        StringBuffer bf = new StringBuffer(part[0] + ".");
+        if (part.length > 1) {
+            if(part[1].length()>pad) {
+                throw new RuntimeException("precision max "+pad);
+            }
+            pad = Integer.parseInt(precision) - part[1].length();
+            bf.append(part[1]);
+        }
+        for (int i = 0; i < pad; i++) {
+            bf.append("0");
+        }
+        String asset = precision + "," + symbol;
+        // amount
+        amount = bf.toString().replace(".", "");
+        ByteBuffer ammount = ByteBuffer.allocate(Long.BYTES).order(ByteOrder.LITTLE_ENDIAN)
+                .putLong(Long.parseLong(amount));
+
+        // asset
+        StringBuffer padStr = new StringBuffer();
+        for (int i = 0; i < (7 - symbol.length()); i++) {
+            padStr.append("\0");
+        }
+        char c = (char) Integer.parseInt(precision);
+        asset = c + symbol + padStr;
+        ByteBuffer ba = ByteBuffer.wrap(asset.getBytes());
+        return ByteUtils.concat(ammount.array(), ba.array());
+    }
 }

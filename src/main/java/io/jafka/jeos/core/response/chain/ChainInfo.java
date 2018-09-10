@@ -1,5 +1,9 @@
 package io.jafka.jeos.core.response.chain;
 
+import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.Data;
 
 @Data
@@ -11,7 +15,10 @@ public class ChainInfo {
     private String headBlockId;
     private Long headBlockNum;
     private String headBlockProducer;
-    private String headBlockTime;
+    
+    //@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
+    private LocalDateTime headBlockTime;
+    
     private String lastIrreversibleBlockId;
     private Long lastIrreversibleBlockNum;
     private String serverVersion;

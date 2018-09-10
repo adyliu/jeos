@@ -1,5 +1,7 @@
 package io.jafka.jeos;
 
+import io.jafka.jeos.core.common.SignArg;
+
 /**
  * Local API with EOS without RPC
  * @author adyliu (imxylz@gmail.com)

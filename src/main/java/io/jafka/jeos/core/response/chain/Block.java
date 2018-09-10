@@ -1,5 +1,7 @@
 package io.jafka.jeos.core.response.chain;
 
+import java.time.LocalDateTime;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.jafka.jeos.core.response.history.transaction.Transaction;
@@ -17,7 +19,7 @@ public class Block {
     private String producerSignature;
     private Long refBlockPrefix;
     private Long scheduleVersion;
-    private String timeStamp;
+    private LocalDateTime timestamp;
     private String transactionMroot;
 
     private String actionMerkleRoot;

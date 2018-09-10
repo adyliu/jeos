@@ -26,7 +26,9 @@ public class EosApiServiceGenerator {
     static {
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
+        mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
         mapper.setPropertyNamingStrategy(new SnakeCaseStrategy());
+        mapper.findAndRegisterModules();
         //
         httpClient = new OkHttpClient.Builder().addInterceptor(new LoggingInterceptor()).build();
 

@@ -21,4 +21,5 @@ public class LocalApiImpl implements LocalApi {
     public String toPublicKey(String privateKey) {
         return KeyUtil.toPublicKey(privateKey);
     }
+    
 }
