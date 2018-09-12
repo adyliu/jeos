@@ -54,7 +54,7 @@ public class Ecdsa {
 
 	private BigInteger deterministicGenerateK(Secp256k curve, String dataHash, BigInteger d, int nonce,
 			SignBigInt big) {
-		byte[] hash = Hex.hexStringToBytes(dataHash);
+		byte[] hash = Hex.toBytes(dataHash);
 		if (nonce > 0) {
 			hash = SHA.sha256(ByteUtils.concat(hash, new byte[nonce]));
 		}
@@ -105,7 +105,7 @@ public class Ecdsa {
 		// Step H2b
 		v = SHA.hmacSha256(v, k);
 
-		BigInteger T = new BigInteger(Hex.bytesToHexString(v), 16);
+		BigInteger T = new BigInteger(Hex.toHex(v), 16);
 
 		BigInteger e = new BigInteger(dataHash, 16);
 

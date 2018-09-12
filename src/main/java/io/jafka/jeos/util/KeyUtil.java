@@ -42,7 +42,7 @@ public class KeyUtil {
         new_checksum = SHA.sha256(new_checksum);
         new_checksum = ByteUtils.copy(new_checksum, 0, 4);
         byte[] last_private_key = ByteUtils.copy(private_key, 1, private_key.length - 1);
-        BigInteger d = new BigInteger(Hex.bytesToHexString(last_private_key), 16);
+        BigInteger d = new BigInteger(Hex.toHex(last_private_key), 16);
         return d;
     }
     public static String toPublicKey(String privateKey) {

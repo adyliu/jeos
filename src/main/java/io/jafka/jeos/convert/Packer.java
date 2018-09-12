@@ -3,6 +3,7 @@ package io.jafka.jeos.convert;
 import io.jafka.jeos.core.request.chain.json2bin.CreateAccountArg;
 import io.jafka.jeos.core.request.chain.json2bin.TransferArg;
 import io.jafka.jeos.util.ByteArrayBuffer;
+import io.jafka.jeos.util.Raw;
 import io.jafka.jeos.util.ecc.Hex;
 
 /**
@@ -13,12 +14,12 @@ import io.jafka.jeos.util.ecc.Hex;
 public class Packer {
 
     public static String packTransfer(TransferArg arg) {
-        ByteArrayBuffer buff = new ByteArrayBuffer(128);
-        buff.append(DataType.name.encode(arg.getFrom(), TokenFunction.transfer));
-        buff.append(DataType.name.encode(arg.getTo(), TokenFunction.transfer));
-        buff.append(DataType.asset.encode(arg.getQuantity(), TokenFunction.transfer));
-        buff.append(DataType.string.encode(arg.getMemo(), TokenFunction.transfer));
-        return Hex.bytesToHexString(buff.toByteArray());
+        Raw raw = new Raw();
+        raw.packName(arg.getFrom());
+        raw.packName(arg.getTo());
+        raw.packAsset(arg.getQuantity());
+        raw.pack(arg.getMemo());
+        return raw.toHex();
     }
     
     public static String packCreateAccount(CreateAccountArg arg) {
@@ -31,7 +32,7 @@ public class Packer {
         arg.getActive().getKeys().stream().forEach(k ->{
             buff.append(DataType.key.encode(k.getKey(), TokenFunction.account));
         });
-        return Hex.bytesToHexString(buff.toByteArray());
+        return Hex.toHex(buff.toByteArray());
     }
     
     public static void main(String[] args) throws Exception {

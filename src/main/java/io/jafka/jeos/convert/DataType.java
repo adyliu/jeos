@@ -37,6 +37,7 @@ public enum DataType {
                 if(!m.matches()) {
                     throw new RuntimeException("ERROR assert format");
                 }
+                // 1.000 3,EOS@eosio.token
                 v = format("%s %d,%s@eosio.token", m.group(1), m.group(2).length(),m.group(3));
                 System.out.println(v);
             }

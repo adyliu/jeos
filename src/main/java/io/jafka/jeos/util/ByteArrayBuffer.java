@@ -1,5 +1,8 @@
 package io.jafka.jeos.util;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+
 public final class ByteArrayBuffer {
 
     private byte[] buffer;
@@ -23,6 +26,14 @@ public final class ByteArrayBuffer {
     }
     public ByteArrayBuffer append(final byte[] b) {
         return append(b,0,b.length);
+    }
+    public ByteArrayBuffer append(byte b) {
+        return append((int)b);
+    }
+    public ByteArrayBuffer append(long v) {
+       byte[] b = ByteBuffer.allocate(Long.BYTES).order(ByteOrder.LITTLE_ENDIAN)
+                .putLong(v).array();
+       return append(b);
     }
 
     /**

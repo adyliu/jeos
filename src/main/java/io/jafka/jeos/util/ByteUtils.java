@@ -1,10 +1,15 @@
 package io.jafka.jeos.util;
 
 import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.stream.IntStream;
+
+import io.jafka.jeos.util.ecc.Hex;
 
 
 
@@ -83,7 +88,22 @@ public class ByteUtils {
 		long vl = Long.parseLong(value);
 		return new byte[] { (byte) (vl & 0x00FF) };
 	}
-
+	public static ByteArrayBuffer writeString(String s, ByteArrayBuffer buf) {
+	    byte[] dat = s.getBytes(StandardCharsets.UTF_8);
+	    writeVarint32(dat.length, buf);
+	    return buf.append(dat);
+	}
+	public static ByteArrayBuffer writeVarint32(String v, ByteArrayBuffer buf) {
+	    return writeVarint32(Long.parseLong(v), buf);
+	}
+	public static ByteArrayBuffer writeVarint32(long v, ByteArrayBuffer buf) {
+	    while(v >= 0x80) {
+	        byte b = (byte)((v & 0x7f) | 0x80);
+	        buf.append(b);
+	        v >>>= 7;
+	    }
+	    return buf.append((byte)v);
+	}
 	public static byte[] writerVarint32(String v) {
 		long value = Long.parseLong(v);
 		byte[] a = new byte[] {};
@@ -245,4 +265,16 @@ public class ByteUtils {
         ByteBuffer ba = ByteBuffer.wrap(asset.getBytes());
         return ByteUtils.concat(ammount.array(), ba.array());
     }
+	public static byte[] writeString(String v) throws Exception{
+	    ByteArrayOutputStream baos = new ByteArrayOutputStream(64); 
+	    DataOutputStream dos = new DataOutputStream(baos);
+	    byte[] dat = v.getBytes(StandardCharsets.UTF_8);
+	    dos.writeInt(dat.length);
+	    dos.write(dat);
+	    return baos.toByteArray();
+	}
+	
+	public static void main(String[] args) throws Exception {
+	    
+	}
 }
