@@ -1,5 +1,7 @@
 package io.jafka.jeos.core.response.history.transaction;
 
+import java.util.Optional;
+
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import lombok.Data;
@@ -12,5 +14,5 @@ public class Transaction {
     
     @JsonDeserialize(using = TrxDeserializer.class)
     // nullable
-    private Trx trx;
+    private Optional<Trx> trx;
 }
