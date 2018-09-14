@@ -18,5 +18,7 @@ public class DelegatebwArg {
     private String receiver;
     private String stakeNetQuantity;
     private String stakeCpuQuantity;
+    // Transfer voting power and right to unstake EOS to receiver
+    // 0 or 1
     private Long transfer = 0L;
 }

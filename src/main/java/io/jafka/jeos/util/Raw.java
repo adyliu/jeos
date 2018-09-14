@@ -34,16 +34,20 @@ public class Raw {
         }
         s.append((byte)v);
     }
+    /**
+     * uint32
+     */
     public void pack(int v) {
-        packVarint32((long)v);
+       byte[] b = ByteBuffer.allocate(Integer.BYTES).order(ByteOrder.LITTLE_ENDIAN).putInt(v).array();
+       s.append(b);
     }
     public void pack(String str) {
         byte[] dat = str.getBytes(StandardCharsets.UTF_8);
-        pack(dat.length);
+        packVarint32(dat.length);
         s.append(dat);
     }
     public void pack(Collection<String> strs) {
-        pack(strs.size());
+        packVarint32(strs.size());
         strs.stream().forEach(this::pack);
     }
     //
@@ -61,6 +65,9 @@ public class Raw {
             return (c - '1') + 1;
          return 0;
     }
+    /**
+     * account_name name
+     */
     public void packName(String n) {
         StringBuilder bits = new StringBuilder(64);
         for(int i=0;i<=12;i++) {
@@ -102,10 +109,11 @@ public class Raw {
     public static void main(String[] args) throws Exception {
         //System.out.println(Integer.toBinaryString(31));
         Raw raw = new Raw();
-        raw.packName("shijiebangmm");
+        raw.packName("shijiebanggg");
         raw.packName("womenshi1111");
-        raw.packAsset("1.0000 EOS");
-        raw.pack("我是中国人");
+        raw.packVarint32(1);
+        //raw.packAsset("1.0000 EOS");
+        //raw.pack("我是中国人");
         System.out.println(raw.toHex());
     }
 }
