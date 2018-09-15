@@ -8,6 +8,11 @@
 
   <properties>
     <com.squareup.retrofit2.version>2.4.0</com.squareup.retrofit2.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <compile.encoding>${project.build.sourceEncoding}</compile.encoding>
+    <compile.source>1.8</compile.source>
+    <compile.target>1.8</compile.target>
+    <resources.encoding>${compile.encoding}</resources.encoding>
   </properties>
 
   <dependencies>
@@ -69,10 +74,20 @@
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>2.6</version>
         <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
+          <encoding>${resources.encoding}</encoding>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.1</version>
+        <configuration>
+          <source>${compile.source}</source>
+          <target>${compile.target}</target>
+          <encoding>${compile.encoding}</encoding>
         </configuration>
       </plugin>
     </plugins>
@@ -134,6 +149,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-gpg-plugin</artifactId>
+            <version>1.4</version>
             <executions>
               <execution>
                 <id>sign-artifacts</id>
