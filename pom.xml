@@ -14,7 +14,29 @@
     <compile.target>1.8</compile.target>
     <resources.encoding>${compile.encoding}</resources.encoding>
   </properties>
-
+  <scm>
+    <connection>scm:git:git@github.com:adyliu/jeos.git</connection>
+    <developerConnection>scm:git:git@github.com:adyliu/jeos.git</developerConnection>
+    <url>https://github.com/adyliu/jeos</url>
+  </scm>
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  <developers>
+    <developer>
+      <id>imxylz</id>
+      <name>Ady Liu</name>
+      <email>imxylz@gmail.com</email>
+      <url>https://github.com/adyliu</url>
+      <roles>
+        <role>developer</role>
+      </roles>
+    </developer>
+  </developers>
   <dependencies>
 
     <dependency>
@@ -164,4 +186,6 @@
       </build>
     </profile>
   </profiles>
+  <name>jeos</name>
+  <url>https://github.com/adyliu/jeos</url>
 </project>
