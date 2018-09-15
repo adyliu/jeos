@@ -2,7 +2,28 @@
 
 > eosio java sdk with eos rpc-api
 
-## Maven dependency
+## dependency
+
+### release version
+
+Maven [http://repo1.maven.org/maven2/io/jafka/jeos](http://repo1.maven.org/maven2/io/jafka/jeos)
+
+```xml
+<dependencies>
+  <dependency>
+    <groupId>io.jafka</groupId>
+    <artifactId>jeos</artifactId>
+    <version>0.9.9</version>
+  </dependency>
+</dependencies>
+```
+
+Gradle
+
+> compile group: 'io.jafka', name: 'jeos', version: '0.9.9'
+
+
+### latest snapshot version
 
 ```xml
 <repositories>

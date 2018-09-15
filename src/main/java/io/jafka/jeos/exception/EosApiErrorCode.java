@@ -116,10 +116,11 @@ public enum EosApiErrorCode implements ErrorCode {
     ACTION_TO_EXECUTE_IS_ON_THE_BLACKLIST(3130005),
     PUBLIC_KEY_IN_AUTHORITY_IS_ON_THE_BLACKLIST(3130006);
 
-    private static final Map<Integer, EosApiErrorCode> idx = new HashMap();
+    private static final Map<Integer, EosApiErrorCode> idx = new HashMap<>();
     static {
-        for (EosApiErrorCode errorCode : EosApiErrorCode.values())
+        for (EosApiErrorCode errorCode : EosApiErrorCode.values()) {
             idx.put(errorCode.number, errorCode);
+        }
     }
 
     private final int number;

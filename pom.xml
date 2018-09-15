@@ -3,13 +3,40 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.jafka</groupId>
   <artifactId>jeos</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>0.9.9</version>
   <description>java client for eos rpc-api</description>
 
   <properties>
     <com.squareup.retrofit2.version>2.4.0</com.squareup.retrofit2.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <compile.encoding>${project.build.sourceEncoding}</compile.encoding>
+    <compile.source>1.8</compile.source>
+    <compile.target>1.8</compile.target>
+    <resources.encoding>${compile.encoding}</resources.encoding>
   </properties>
-
+  <scm>
+    <connection>scm:git:git@github.com:adyliu/jeos.git</connection>
+    <developerConnection>scm:git:git@github.com:adyliu/jeos.git</developerConnection>
+    <url>https://github.com/adyliu/jeos</url>
+  </scm>
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  <developers>
+    <developer>
+      <id>imxylz</id>
+      <name>Ady Liu</name>
+      <email>imxylz@gmail.com</email>
+      <url>https://github.com/adyliu</url>
+      <roles>
+        <role>developer</role>
+      </roles>
+    </developer>
+  </developers>
   <dependencies>
 
     <dependency>
@@ -57,11 +84,11 @@
       <version>2.9.4</version>
     </dependency>
 
-<!--     <dependency>
+    <dependency>
       <groupId>com.fasterxml.jackson.datatype</groupId>
       <artifactId>jackson-datatype-jdk8</artifactId>
       <version>2.9.4</version>
-    </dependency> -->
+    </dependency>
   </dependencies>
 
 
@@ -69,12 +96,96 @@
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>2.6</version>
         <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
+          <encoding>${resources.encoding}</encoding>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.1</version>
+        <configuration>
+          <source>${compile.source}</source>
+          <target>${compile.target}</target>
+          <encoding>${compile.encoding}</encoding>
         </configuration>
       </plugin>
     </plugins>
   </build>
+
+  <distributionManagement>
+    <snapshotRepository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+    <repository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+    </repository>
+  </distributionManagement>
+
+  <profiles>
+    <profile>
+      <id>release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+            <version>2.2.1</version>
+            <executions>
+              <execution>
+                <id>attach-sources</id>
+                <goals>
+                  <goal>jar-no-fork</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>2.9.1</version>
+            <executions>
+              <execution>
+                <id>attach-javadocs</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.sonatype.plugins</groupId>
+            <artifactId>nexus-staging-maven-plugin</artifactId>
+            <version>1.6.7</version>
+            <extensions>true</extensions>
+            <configuration>
+              <serverId>sonatype-nexus-staging</serverId>
+              <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+              <autoReleaseAfterClose>true</autoReleaseAfterClose>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>1.4</version>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+  <name>jeos</name>
+  <url>https://github.com/adyliu/jeos</url>
 </project>
