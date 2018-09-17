@@ -13,14 +13,14 @@ Maven [http://repo1.maven.org/maven2/io/jafka/jeos](http://repo1.maven.org/maven
   <dependency>
     <groupId>io.jafka</groupId>
     <artifactId>jeos</artifactId>
-    <version>0.9.9</version>
+    <version>0.9.10</version>
   </dependency>
 </dependencies>
 ```
 
 Gradle
 
-> compile group: 'io.jafka', name: 'jeos', version: '0.9.9'
+> compile group: 'io.jafka', name: 'jeos', version: '0.9.10'
 
 
 ### latest snapshot version
