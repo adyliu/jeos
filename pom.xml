@@ -4,7 +4,7 @@
   <groupId>io.jafka</groupId>
   <artifactId>jeos</artifactId>
   <version>1.0-SNAPSHOT</version>
-  <description>java client for eos rpc-api</description>
+  <description>EOS Blockchain Java SDK</description>
 
   <properties>
     <com.squareup.retrofit2.version>2.4.0</com.squareup.retrofit2.version>

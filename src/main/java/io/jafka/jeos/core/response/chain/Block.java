@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import io.jafka.jeos.core.response.block.NewProducer;
 import io.jafka.jeos.core.response.history.transaction.Transaction;
 import lombok.Data;
 
@@ -26,7 +27,7 @@ public class Block {
 
     private String blockMerkleRoot;
 
-    private String[] newProducers;
+    private NewProducer newProducers;
 
     private Transaction[] transactions;
 
