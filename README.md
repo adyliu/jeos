@@ -1,4 +1,4 @@
-# java client for EOS block chain
+# EOS Blockchain Java SDK
 
 > eosio java sdk with eos rpc-api
 
