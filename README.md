@@ -2,6 +2,9 @@
 
 > eosio java sdk with eos rpc-api
 
+[![Maven Central](https://img.shields.io/maven-central/v/io.jafka/jeos.svg)](https://maven-badges.herokuapp.com/maven-central/io.jafka/jeos)
+[![Javadocs](https://javadoc.io/badge/io.jafka/jeos.svg)](https://javadoc.io/doc/io.jafka/jeos)
+
 ## dependency
 
 ### release version
