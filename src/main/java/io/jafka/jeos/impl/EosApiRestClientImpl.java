@@ -12,6 +12,7 @@ import java.util.UUID;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.jafka.jeos.EosApi;
+import io.jafka.jeos.core.common.SignArg;
 import io.jafka.jeos.core.common.WalletKeyType;
 import io.jafka.jeos.core.common.transaction.PackedTransaction;
 import io.jafka.jeos.core.common.transaction.SignedPackedTransaction;
@@ -124,6 +125,10 @@ public class EosApiRestClientImpl implements EosApi {
     @Override
     public PushedTransaction pushTransaction(String compression, SignedPackedTransaction packedTransaction){
         return EosApiServiceGenerator.executeSync(eosChainApiService.pushTransaction(new PushTransactionRequest(compression, packedTransaction, packedTransaction.getSignatures())));
+    }
+    @Override
+    public PushedTransaction pushTransaction(PushTransactionRequest pushTransactionRequest) {
+        return EosApiServiceGenerator.executeSync(eosChainApiService.pushTransaction(pushTransactionRequest));
     }
 
     @Override
@@ -257,6 +262,21 @@ public class EosApiRestClientImpl implements EosApi {
     @Override
     public ObjectMapper getObjectMapper() {
         return EosApiServiceGenerator.getMapper();
+    }
+    
+    @Override
+    public SignArg getSignArg(int expiredSecond) {
+        ChainInfo info = getChainInfo();
+        Block block = getBlock(info.getLastIrreversibleBlockNum().toString());
+        
+        SignArg arg = new SignArg();
+        arg.setChainId(info.getChainId());
+        arg.setExpiredSecond(expiredSecond);
+        arg.setHeadBlockNum(info.getHeadBlockNum());
+        arg.setHeadBlockTime(info.getHeadBlockTime());
+        arg.setLastIrreversibleBlockNum(info.getLastIrreversibleBlockNum());
+        arg.setRefBlockPrefix(block.getRefBlockPrefix());
+        return arg;
     }
     
     // ------------------------------------------------------------------------------

@@ -81,12 +81,11 @@ public class Raw {
         //FIXME: what's this?
         s.append((byte)0);
         s.append(b, 0, b.length-4);
-//        System.out.println(b.length+" b= "+Hex.toHex(b));
-//        b = ByteBuffer.allocate(b.length).order(ByteOrder.BIG_ENDIAN).put(b).array();
-//        System.out.println("b= "+Hex.toHex(b));
-//        byte[] dat = ByteUtils.copy(b, 0, b.length - 4);
-//        System.out.println("dat= "+Hex.toHex(b));
-//        s.append(dat);
+
+        return this;
+    }
+    public Raw pack(byte[] bytes) {
+        s.append(bytes);
         return this;
     }
     //
@@ -107,7 +106,7 @@ public class Raw {
     /**
      * account_name name
      */
-    public void packName(String n) {
+    public Raw packName(String n) {
         StringBuilder bits = new StringBuilder(64);
         for(int i=0;i<=12;i++) {
             int c = i<n.length() ? charidx(n.charAt(i)) : 0;
@@ -121,8 +120,9 @@ public class Raw {
         BigInteger vname = new BigInteger(bits.toString(), 2);
         byte[] b = ByteBuffer.allocate(Long.BYTES).order(ByteOrder.LITTLE_ENDIAN).putLong(vname.longValue()).array();
         s.append(b);
+        return this;
     }
-    public void packAsset(String v) {
+    public Raw packAsset(String v) {
         // 1.0 EOS
         Pattern p = Pattern.compile("(\\d+\\.?(\\d*)) (.+)");
         Matcher m = p.matcher(v);
@@ -143,6 +143,7 @@ public class Raw {
         for(int i=0;i<7-symbol.length();i++) {
             s.append(0x0);
         }
+        return this;
     }
     @Override
     public String toString() {
@@ -160,26 +161,4 @@ public class Raw {
         return c;
     }
     
-    public static void main(String[] args) throws Exception {
-        //System.out.println(Integer.toBinaryString(31));
-        Raw raw = new Raw();
-//        raw.packName("shijiebanggg");
-//        raw.packName("womenshi1111");
-//        raw.packVarint32(1);
-        //raw.packUint32(7);
-        //raw.packUint16(3);
-        //raw.packPublicKey("EOS7XP7Ks7j68Uh64HGTEeiaMsgAgKcuZbYAAf86SoPLBpxcBX5it");
-        //raw.packAsset("1.0000 EOS");
-        //raw.pack("我是中国人");
-        //raw.packVarint32(1);
-        raw.packUint32(65536);
-        
-        //raw.packUint16(0);
-        
-        //System.out.println(raw.toHex());
-        System.out.println(new Raw().packUint32(65536).toHex());
-        System.out.println(new Raw().packUint16(1).toHex());
-        System.out.println(new Raw().packVarint32(65536).toHex());
-        System.out.println(new Raw().packPublicKey("EOS7XP7Ks7j68Uh64HGTEeiaMsgAgKcuZbYAAf86SoPLBpxcBX5it").toHex());
-    }
 }

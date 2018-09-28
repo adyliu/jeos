@@ -4,6 +4,7 @@ import java.math.BigInteger;
 import java.util.Objects;
 import java.util.UUID;
 
+import io.jafka.jeos.util.ecc.Ecdsa;
 import io.jafka.jeos.util.ecc.Hex;
 import io.jafka.jeos.util.ecc.Point;
 import io.jafka.jeos.util.ecc.Ripemd160;
@@ -62,11 +63,39 @@ public class KeyUtil {
         return bf.toString();
     }
     
-    public static void main(String[] args) throws Exception {
-        String privateKey = createPrivateKey(UUID.randomUUID().toString());
-        System.out.println(privateKey +" -> " + toPublicKey(privateKey));
-        //5JHEuLb2UX9hsj17XZ2ZvJDhYJEWZJFhGXpKjsdiKDrnhcpeYGn -> EOS51XY9wXXs9JTDUm2TojHHUPu26D2UGzTY64qh9AeH8hhwxYctt
-        System.out.println(toPublicKey("5JHEuLb2UX9hsj17XZ2ZvJDhYJEWZJFhGXpKjsdiKDrnhcpeYGn"));
-        System.out.println("EOS51XY9wXXs9JTDUm2TojHHUPu26D2UGzTY64qh9AeH8hhwxYctt");
+    public static String signHash(String pk, byte[] b) {
+        String dataSha256 = Hex.toHex(SHA.sha256(b));
+        BigInteger e = new BigInteger(dataSha256, 16);
+        int nonce = 0;
+        int i = 0;
+        BigInteger d = privateKey(pk);
+        Point Q = secp.G().multiply(d);
+        nonce = 0;
+        Ecdsa ecd = new Ecdsa(secp);
+        Ecdsa.SignBigInt sign;
+        while (true) {
+            sign = ecd.sign(dataSha256, d, nonce++);
+            byte der[] = sign.getDer();
+            byte lenR = der[3];
+            byte lenS = der[5 + lenR];
+            if (lenR == 32 && lenS == 32) {
+                i = ecd.calcPubKeyRecoveryParam(e, sign, Q);
+                i += 4; // compressed
+                i += 27; // compact // 24 or 27 :( forcing odd-y 2nd key candidate)
+                break;
+            }
+        }
+        byte[] pub_buf = new byte[65];
+        pub_buf[0] = (byte) i;
+        System.arraycopy(sign.getR().toByteArray(), 0, pub_buf, 1, sign.getR().toByteArray().length);
+        System.arraycopy(sign.getS().toByteArray(), 0, pub_buf, sign.getR().toByteArray().length + 1,
+                sign.getS().toByteArray().length);
+
+        byte[] checksum = Ripemd160.from(Raw.concat(pub_buf, "K1".getBytes())).bytes();
+
+        byte[] signatureString = Raw.concat(pub_buf, Raw.copy(checksum, 0, 4));
+
+        return "SIG_K1_" + Base58.encode(signatureString);
     }
+    
 }

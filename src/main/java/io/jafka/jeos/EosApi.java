@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.jafka.jeos.core.common.SignArg;
 import io.jafka.jeos.core.common.WalletKeyType;
 import io.jafka.jeos.core.common.transaction.PackedTransaction;
 import io.jafka.jeos.core.common.transaction.SignedPackedTransaction;
@@ -50,7 +51,8 @@ public interface EosApi{
     <T> AbiJsonToBin abiJsonToBin(String code, String action, T args);
 
     PushedTransaction pushTransaction(String compression, SignedPackedTransaction packedTransaction);
-
+    PushedTransaction pushTransaction(PushTransactionRequest pushTransactionRequest);
+    
     List<PushedTransaction> pushTransactions(List<PushTransactionRequest> pushTransactionRequests);
 
     RequiredKeys getRequiredKeys(PackedTransaction transaction, List<String> keys);
@@ -93,4 +95,6 @@ public interface EosApi{
     ControlledAccounts getControlledAccounts(String controllingAccountName);
 
     ObjectMapper getObjectMapper();
+    
+    SignArg getSignArg(int expiredSecond);
 }

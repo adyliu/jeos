@@ -19,6 +19,6 @@ public class SignArg {
     LocalDateTime headBlockTime;
     String chainId;
     //
-    Long expiredSecond;
+    int expiredSecond;
 
 }

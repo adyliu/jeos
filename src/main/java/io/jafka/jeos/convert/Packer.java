@@ -1,8 +1,10 @@
 package io.jafka.jeos.convert;
 
+import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.Collections;
 
+import io.jafka.jeos.core.common.transaction.PackedTransaction;
 import io.jafka.jeos.core.request.chain.json2bin.BuyRamArg;
 import io.jafka.jeos.core.request.chain.json2bin.CreateAccountArg;
 import io.jafka.jeos.core.request.chain.json2bin.DelegatebwArg;
@@ -77,17 +79,51 @@ public class Packer {
         });
         return raw.toHex();
     }
-    
-    public static void main(String[] args) throws Exception {
-        //System.out.println(packTransfer(new TransferArg("shijiebangmm", "womenshi1111", "1.0000 EOS", "我是中国人")));
-        //System.out.println(packBuyrambytes(new BuyRamArg("shijiebanggg", "womenshi1111", 8192)));
-        //System.out.println(packDelegatebw(new DelegatebwArg("shijiebanggg", "shijiebangmm", "0.1000 EOS", "0.1000 EOS", 1L)));
-        PermissionLevelWeight plw = new PermissionLevelWeight();
-        plw.setPermission(new PermissionLevel("shijiebangmm", "active"));
-        plw.setWeight(1);
-        RequiredAuth owner = new RequiredAuth(65536L, Arrays.asList(new Key("EOS7XP7Ks7j68Uh64HGTEeiaMsgAgKcuZbYAAf86SoPLBpxcBX5it",1)), Arrays.asList(plw), Collections.emptyList());
-        RequiredAuth active = new RequiredAuth(1L, Arrays.asList(new Key("EOS7XP7Ks7j68Uh64HGTEeiaMsgAgKcuZbYAAf86SoPLBpxcBX5it",1)), Collections.emptyList(), Collections.emptyList());
-        CreateAccountArg caa = new CreateAccountArg("shijiebanggg","womenshi1111",owner,active);
-        System.out.println(packCreateAccount(caa));
+    public static Raw packPackedTransaction(String chainId, PackedTransaction t) {
+        Raw raw = new Raw();
+        //chain
+        raw.pack(Hex.toBytes(chainId));
+        //expiration
+        raw.packUint32(t.getExpiration().toEpochSecond(ZoneOffset.ofHours(0)));
+        //ref_block_num
+        raw.packUint16(t.getRefBlockNum().intValue());
+        //ref_block_prefix
+        raw.packUint32(t.getRefBlockPrefix());
+        //max_net_usage_words
+        raw.packVarint32(t.getMaxNetUsageWords());
+        //max_cpu_usage_ms
+        raw.packUint8(t.getMaxCpuUsageMs());//TODO: what the type?
+        //delay_sec
+        raw.packVarint32(t.getDelaySec());
+        //context_free_actions
+        raw.packVarint32(t.getContextFreeActions().size());
+        //TODO: getContextFreeActions
+        
+        //actions
+        raw.packVarint32(t.getActions().size());
+        t.getActions().forEach(a -> {
+            //action.account
+            raw.packName(a.getAccount())//
+                    .packName(a.getName())//
+                    .packVarint32(a.getAuthorization().size())//
+            ;
+            //action.authorization
+            a.getAuthorization().forEach(au -> {
+                raw.packName(au.getActor())//
+                        .packName(au.getPermission());
+            });
+            //action.data
+            byte[] dat = Hex.toBytes(a.getData());
+            raw.packVarint32(dat.length);
+            raw.pack(dat);
+        });
+        //transaction_extensions
+        //raw.packVarint32(t.getTransactionExtensions().size());
+        //TODO: getTransactionExtensions
+        
+        //context_free_data
+        //raw.packVarint32(t.getContextFreeActions().size());
+        return raw;
     }
+    
 }
