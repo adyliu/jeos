@@ -1,8 +1,6 @@
 package io.jafka.jeos.exception;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class EosErrorDetails {
 
@@ -53,10 +51,17 @@ public class EosErrorDetails {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
-                .append("message", message)
-                .append("file", file)
-                .append("lineNumber", lineNumber.toString())
-                .toString();
+        StringBuilder builder = new StringBuilder();
+        builder.append("EosErrorDetails [message=");
+        builder.append(message);
+        builder.append(", file=");
+        builder.append(file);
+        builder.append(", lineNumber=");
+        builder.append(lineNumber);
+        builder.append(", method=");
+        builder.append(method);
+        builder.append("]");
+        return builder.toString();
     }
+    
 }

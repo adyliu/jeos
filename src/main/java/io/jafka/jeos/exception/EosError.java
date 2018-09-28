@@ -1,7 +1,6 @@
 package io.jafka.jeos.exception;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
+import java.util.Arrays;
 
 public class EosError {
 
@@ -51,10 +50,17 @@ public class EosError {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
-                .append("code", code)
-                .append("name", name)
-                .append("what", what)
-                .toString();
+        StringBuilder builder = new StringBuilder();
+        builder.append("EosError [code=");
+        builder.append(code);
+        builder.append(", name=");
+        builder.append(name);
+        builder.append(", what=");
+        builder.append(what);
+        builder.append(", details=");
+        builder.append(Arrays.toString(details));
+        builder.append("]");
+        return builder.toString();
     }
+    
 }

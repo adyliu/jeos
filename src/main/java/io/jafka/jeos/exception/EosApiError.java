@@ -1,10 +1,5 @@
 package io.jafka.jeos.exception;
 
-
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
-
 public class EosApiError {
 
     private String message;
@@ -37,12 +32,19 @@ public class EosApiError {
         this.error = error;
     }
 
+    
+
     @Override
     public String toString() {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
-                .append("message", message)
-                .append("code", code)
-                .toString();
+        StringBuilder builder = new StringBuilder();
+        builder.append("EosApiError [message=");
+        builder.append(message);
+        builder.append(", code=");
+        builder.append(code);
+        builder.append(", error=");
+        builder.append(error);
+        builder.append("]");
+        return builder.toString();
     }
 
     public String getDetailedMessage() {
