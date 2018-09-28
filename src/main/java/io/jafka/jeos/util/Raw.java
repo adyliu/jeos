@@ -148,6 +148,17 @@ public class Raw {
     public String toString() {
         return this.toHex();
     }
+    public static byte[] concat(byte[] a, byte[] b) {
+        byte[] c = new byte[a.length + b.length];
+        System.arraycopy(a, 0, c, 0, a.length);
+        System.arraycopy(b, 0, c, a.length, b.length);
+        return c;
+    }
+    public static byte[] copy(byte[] src, int start, int length) {
+        byte[] c = new byte[length];
+        System.arraycopy(src, start, c, 0, length);
+        return c;
+    }
     
     public static void main(String[] args) throws Exception {
         //System.out.println(Integer.toBinaryString(31));

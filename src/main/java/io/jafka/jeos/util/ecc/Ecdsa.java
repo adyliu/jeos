@@ -4,7 +4,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import io.jafka.jeos.util.ByteUtils;
+import io.jafka.jeos.util.Raw;
 import io.jafka.jeos.util.SHA;
 
 
@@ -56,11 +56,11 @@ public class Ecdsa {
 			SignBigInt big) {
 		byte[] hash = Hex.toBytes(dataHash);
 		if (nonce > 0) {
-			hash = SHA.sha256(ByteUtils.concat(hash, new byte[nonce]));
+			hash = SHA.sha256(Raw.concat(hash, new byte[nonce]));
 		}
 		byte[] x = null;
 		if (d.toByteArray()[0] == 0) {
-			x = ByteUtils.copy(d.toByteArray(), 1, d.toByteArray().length - 1);
+			x = Raw.copy(d.toByteArray(), 1, d.toByteArray().length - 1);
 		} else {
 			x = d.toByteArray();
 		}
@@ -90,14 +90,14 @@ public class Ecdsa {
 		Arrays.fill(k, (byte) 0x00);
 
 		// d
-		byte[] db = ByteUtils.concat(ByteUtils.concat(ByteUtils.concat(v, new byte[] { 0 }), x), hash);
+		byte[] db = Raw.concat(Raw.concat(Raw.concat(v, new byte[] { 0 }), x), hash);
 
 		k = SHA.hmacSha256(db, k);
 
 		// e
 		v = SHA.hmacSha256(v, k);
 		// f
-		byte[] fb = ByteUtils.concat(ByteUtils.concat(ByteUtils.concat(v, new byte[] { 1 }), x), hash);
+		byte[] fb = Raw.concat(Raw.concat(Raw.concat(v, new byte[] { 1 }), x), hash);
 		k = SHA.hmacSha256(fb, k);
 		// g
 		v = SHA.hmacSha256(v, k);
@@ -111,7 +111,7 @@ public class Ecdsa {
 
 		Boolean check = checkSig(T, d, e, big);
 		while (T.signum() <= 0 || T.compareTo(curve.n()) >= 0 || !check) {
-			k = SHA.hmacSha256(ByteUtils.concat(v, new byte[] { 0 }), k);
+			k = SHA.hmacSha256(Raw.concat(v, new byte[] { 0 }), k);
 			v = SHA.hmacSha256(v, k);
 			v = SHA.hmacSha256(v, k);
 			T = new BigInteger(v);

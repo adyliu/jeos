@@ -19,16 +19,18 @@ public class KeyUtil {
     public static final String address_prefix = "EOS";
 
     public static final Secp256k secp = new Secp256k();
-    
+    public static String createPrivateKey() {
+        return createPrivateKey(UUID.randomUUID().toString());
+    }
     public static String createPrivateKey(String seed) {
         Objects.requireNonNull(seed);
         byte[] a = { (byte) 0x80 };
         byte[] b = new BigInteger(SHA.sha256(seed)).toByteArray();
-        byte[] private_key = ByteUtils.concat(a, b);
+        byte[] private_key = Raw.concat(a, b);
         byte[] checksum = SHA.sha256(private_key);
         checksum = SHA.sha256(checksum);
-        byte[] check = ByteUtils.copy(checksum, 0, 4);
-        byte[] pk = ByteUtils.concat(private_key, check);
+        byte[] check = Raw.copy(checksum, 0, 4);
+        byte[] pk = Raw.concat(private_key, check);
         return Base58.encode(pk);
     }
     private static BigInteger privateKey(String pk) {
@@ -37,11 +39,11 @@ public class KeyUtil {
         if (private_wif[0] != version) {
             throw new IllegalArgumentException( "Expected version " + 0x80 + ", instead got " + version);
         }
-        byte[] private_key = ByteUtils.copy(private_wif, 0, private_wif.length - 4);
+        byte[] private_key = Raw.copy(private_wif, 0, private_wif.length - 4);
         byte[] new_checksum = SHA.sha256(private_key);
         new_checksum = SHA.sha256(new_checksum);
-        new_checksum = ByteUtils.copy(new_checksum, 0, 4);
-        byte[] last_private_key = ByteUtils.copy(private_key, 1, private_key.length - 1);
+        new_checksum = Raw.copy(new_checksum, 0, 4);
+        byte[] last_private_key = Raw.copy(private_key, 1, private_key.length - 1);
         BigInteger d = new BigInteger(Hex.toHex(last_private_key), 16);
         return d;
     }
@@ -53,16 +55,18 @@ public class KeyUtil {
         Point ep = secp.G().multiply(d);
         byte[] pub_buf = ep.getEncoded();
         byte[] csum = Ripemd160.from(pub_buf).bytes();
-        csum = ByteUtils.copy(csum, 0, 4);
-        byte[] addy = ByteUtils.concat(pub_buf, csum);
+        csum = Raw.copy(csum, 0, 4);
+        byte[] addy = Raw.concat(pub_buf, csum);
         StringBuffer bf = new StringBuffer(address_prefix);
         bf.append(Base58.encode(addy));
         return bf.toString();
     }
     
     public static void main(String[] args) throws Exception {
-        System.out.println(createPrivateKey(UUID.randomUUID().toString()));
+        String privateKey = createPrivateKey(UUID.randomUUID().toString());
+        System.out.println(privateKey +" -> " + toPublicKey(privateKey));
         //5JHEuLb2UX9hsj17XZ2ZvJDhYJEWZJFhGXpKjsdiKDrnhcpeYGn -> EOS51XY9wXXs9JTDUm2TojHHUPu26D2UGzTY64qh9AeH8hhwxYctt
         System.out.println(toPublicKey("5JHEuLb2UX9hsj17XZ2ZvJDhYJEWZJFhGXpKjsdiKDrnhcpeYGn"));
+        System.out.println("EOS51XY9wXXs9JTDUm2TojHHUPu26D2UGzTY64qh9AeH8hhwxYctt");
     }
 }
