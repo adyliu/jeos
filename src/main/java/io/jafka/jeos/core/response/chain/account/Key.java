@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Key {
     private String key;
-    private Long weight;
+    private Integer weight;
 }

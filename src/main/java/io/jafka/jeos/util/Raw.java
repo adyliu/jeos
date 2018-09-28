@@ -26,29 +26,68 @@ public class Raw {
         this.s = s;
     }
     
-    public void packVarint32(long v) {
+    public Raw packVarint32(long v) {
         while(v >= 0x80) {
             byte b = (byte)((v & 0x7f) | 0x80);
             s.append(b);
             v >>>= 7;
         }
         s.append((byte)v);
+        return this;
     }
     /**
      * uint32
      */
-    public void pack(int v) {
+    public Raw pack(int v) {
        byte[] b = ByteBuffer.allocate(Integer.BYTES).order(ByteOrder.LITTLE_ENDIAN).putInt(v).array();
        s.append(b);
+       return this;
     }
-    public void pack(String str) {
+    public Raw packUint64(long v) {
+        byte[] b = ByteBuffer.allocate(Long.BYTES).order(ByteOrder.LITTLE_ENDIAN).putLong(v).array();
+        s.append(b);
+        return this;
+    }
+    public Raw packUint32(long v) {
+        byte[] b = ByteBuffer.allocate(Integer.BYTES).order(ByteOrder.LITTLE_ENDIAN).putInt((int)v).array();
+        s.append(b);
+        return this;
+    }
+    public Raw packUint16(int v) {
+        s.append((byte) (v & 0x00FF) );
+        s.append((byte) ((v & 0xFF00) >>> 8));
+        return this;
+    }
+    public Raw packUint8(int v) {
+        s.append((byte) (v & 0x00FF) );
+        return this;
+    }
+    public Raw pack(String str) {
         byte[] dat = str.getBytes(StandardCharsets.UTF_8);
         packVarint32(dat.length);
         s.append(dat);
+        return this;
     }
-    public void pack(Collection<String> strs) {
+    public Raw pack(Collection<String> strs) {
         packVarint32(strs.size());
         strs.stream().forEach(this::pack);
+        return this;
+    }
+    public Raw packPublicKey(String key) {
+        if(key.startsWith("EOS")) {
+            key = key.substring(3);
+        }
+        byte[] b = Base58.decode(key);
+        //FIXME: what's this?
+        s.append((byte)0);
+        s.append(b, 0, b.length-4);
+//        System.out.println(b.length+" b= "+Hex.toHex(b));
+//        b = ByteBuffer.allocate(b.length).order(ByteOrder.BIG_ENDIAN).put(b).array();
+//        System.out.println("b= "+Hex.toHex(b));
+//        byte[] dat = ByteUtils.copy(b, 0, b.length - 4);
+//        System.out.println("dat= "+Hex.toHex(b));
+//        s.append(dat);
+        return this;
     }
     //
     public byte[] bytes() {
@@ -105,15 +144,31 @@ public class Raw {
             s.append(0x0);
         }
     }
+    @Override
+    public String toString() {
+        return this.toHex();
+    }
     
     public static void main(String[] args) throws Exception {
         //System.out.println(Integer.toBinaryString(31));
         Raw raw = new Raw();
-        raw.packName("shijiebanggg");
-        raw.packName("womenshi1111");
-        raw.packVarint32(1);
+//        raw.packName("shijiebanggg");
+//        raw.packName("womenshi1111");
+//        raw.packVarint32(1);
+        //raw.packUint32(7);
+        //raw.packUint16(3);
+        //raw.packPublicKey("EOS7XP7Ks7j68Uh64HGTEeiaMsgAgKcuZbYAAf86SoPLBpxcBX5it");
         //raw.packAsset("1.0000 EOS");
         //raw.pack("我是中国人");
-        System.out.println(raw.toHex());
+        //raw.packVarint32(1);
+        raw.packUint32(65536);
+        
+        //raw.packUint16(0);
+        
+        //System.out.println(raw.toHex());
+        System.out.println(new Raw().packUint32(65536).toHex());
+        System.out.println(new Raw().packUint16(1).toHex());
+        System.out.println(new Raw().packVarint32(65536).toHex());
+        System.out.println(new Raw().packPublicKey("EOS7XP7Ks7j68Uh64HGTEeiaMsgAgKcuZbYAAf86SoPLBpxcBX5it").toHex());
     }
 }

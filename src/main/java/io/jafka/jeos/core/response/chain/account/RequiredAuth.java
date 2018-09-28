@@ -1,17 +1,18 @@
 package io.jafka.jeos.core.response.chain.account;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class RequiredAuth {
-
-    private List<String> accounts;
-
-    private List<Key> keys;
-
     private Long threshold;
-
-    private List<Wait> waits;
+    private List<Key> keys = new ArrayList<>();
+    private List<PermissionLevelWeight> accounts = new ArrayList<>();
+    private List<Wait> waits = new ArrayList<>();
 }
