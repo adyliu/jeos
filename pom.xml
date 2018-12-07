@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.jafka</groupId>
   <artifactId>jeos</artifactId>
-  <version>0.9.13</version>
+  <version>0.9.14</version>
   <description>EOS Blockchain Java SDK</description>
 
   <properties>
