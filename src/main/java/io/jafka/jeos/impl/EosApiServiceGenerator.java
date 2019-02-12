@@ -58,7 +58,7 @@ public class EosApiServiceGenerator {
                 return response.body();
             } else {
                 EosApiError apiError = getEosApiError(response);
-                throw new EosApiException(apiError.getDetailedMessage(), EosApiErrorCode.get(apiError.getEosErrorCode()));
+                throw new EosApiException(apiError.getDetailedMessage(), EosApiErrorCode.get(apiError.getEosErrorCode()), apiError.getError().getDetails());
             }
         } catch (IOException e) {
             throw new EosApiException(e);
