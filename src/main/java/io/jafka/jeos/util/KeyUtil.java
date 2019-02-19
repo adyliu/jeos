@@ -20,13 +20,11 @@ public class KeyUtil {
     public static final String address_prefix = "EOS";
 
     public static final Secp256k secp = new Secp256k();
-    public static String createPrivateKey() {
-        return createPrivateKey(UUID.randomUUID().toString());
-    }
-    public static String createPrivateKey(String seed) {
+
+    public static String createPrivateKey(byte[] seed) {
         Objects.requireNonNull(seed);
         byte[] a = { (byte) 0x80 };
-        byte[] b = new BigInteger(SHA.sha256(seed)).toByteArray();
+        byte[] b = seed;
         byte[] private_key = Raw.concat(a, b);
         byte[] checksum = SHA.sha256(private_key);
         checksum = SHA.sha256(checksum);
