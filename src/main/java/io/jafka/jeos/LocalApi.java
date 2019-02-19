@@ -14,7 +14,7 @@ import io.jafka.jeos.impl.EosApiServiceGenerator;
  */
 public interface LocalApi {
 
-    String createPrivateKey();
+    String createPrivateKey(byte[] seed);
 
     String toPublicKey(String privateKey);
 
