@@ -13,7 +13,7 @@ public class Block {
 
     private String actionMroot;
     private Long blockNum;
-    private Integer confirmed;
+    private Long confirmed;
     private String id;
     private String previous;
     private String producer;

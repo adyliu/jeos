@@ -16,7 +16,7 @@ public class Processed {
     private Integer elapsed;
     private String except;
     private String id;
-    private Integer netUsage;
+    private Long netUsage;
     private Receipt receipt;
     private Boolean scheduled;
     
