@@ -29,8 +29,8 @@ import io.jafka.jeos.util.Raw;
 public class LocalApiImpl implements LocalApi {
 
     @Override
-    public String createPrivateKey() {
-        return KeyUtil.createPrivateKey();
+    public String createPrivateKey(byte[] seed) {
+        return KeyUtil.createPrivateKey(seed);
     }
 
     @Override
