@@ -42,7 +42,7 @@ public interface EosApi{
 
     Code getCode(String accountName);
 
-    TableRow getTableRows(String scope, String code, String table);
+    TableRow getTableRows(String scope, String code, String table, String lower_bound, String upper_bound, String limit);
 
     List<String> getCurrencyBalance(String code, String accountName, String symbol);
 
