@@ -33,19 +33,21 @@ import io.jafka.jeos.core.response.chain.transaction.PushedTransaction;
 import io.jafka.jeos.exception.EosApiException;
 import io.jafka.jeos.impl.EosApiServiceGenerator;
 
-public class TransferEOS {
+public class AirQuality {
 
-    static void transfer() throws Exception {
-        ObjectMapper mapper = EosApiServiceGenerator.getMapper();
-
-        final String from = "aqdapserver1";
-
+    static void writeAirData() throws Exception {
         EosApi eosApi = EosApiFactory.create("http://jungle2.cryptolions.io:80");
         SignArg arg = eosApi.getSignArg(120);
         EosApi client = eosApi;
-        // ① pack transfer data
-        TransferArg transferArg = new TransferArg(from, "qiuguochao22", "0.0010 EOS", "我是中国人");
-        AbiJsonToBin data = client.abiJsonToBin("eosio.token", "transfer", transferArg);
+        // ① pack data
+//        List<AirQualityData> airQualityData = Arrays.asList(//
+//                new AirQualityData("4","监测点4","pm2.5数值","voc数值","碳数值","氮数值","硫数值","经度","纬度")//
+//        );
+        AirQualityData airQualityData =  new AirQualityData("4","监测点4","pm2.5数值","voc数值","碳数值","氮数值","硫数值","经度","纬度");
+
+        Map<String, AirQualityData> airQualityDataList = new HashMap<>(4);
+        airQualityDataList.put("airquality", airQualityData);
+        AbiJsonToBin data = client.abiJsonToBin("aqdapserver1", "writeonedata", airQualityDataList);
         System.out.println("bin= " + data.getBinargs());
 
         // ② get the latest block info
@@ -53,11 +55,11 @@ public class TransferEOS {
         System.out.println("blockNum=" + block.getBlockNum());
 
         // ③ create the authorization
-        List<TransactionAuthorization> authorizations = Arrays.asList(new TransactionAuthorization(from, "active"));
+        List<TransactionAuthorization> authorizations = Arrays.asList(new TransactionAuthorization("aqdapserver1", "active"));
 
         // ④ build the all actions
         List<TransactionAction> actions = Arrays.asList(//
-                new TransactionAction("eosio.token", "transfer", authorizations, data.getBinargs())//
+                new TransactionAction("aqdapserver1", "writeonedata", authorizations, data.getBinargs())//
         );
 
         // ⑤ build the packed transaction
@@ -75,14 +77,14 @@ public class TransferEOS {
         PushTransactionRequest req = new PushTransactionRequest();
         req.setTransaction(packedTransaction);
         req.setSignatures(Arrays.asList(hash));
-        LocalApi localApi = EosApiFactory.createLocalApi();
+        //LocalApi localApi = EosApiFactory.createLocalApi();
         PushedTransaction pts = eosApi.pushTransaction(req);
-        System.out.println(localApi.getObjectMapper().writeValueAsString(pts));
+        System.out.println(pts.getTransactionId());
     }
 
     public static void main(String[] args) throws Exception {
         //BasicConfigurator.configure();
-        transfer();
+        writeAirData();
     }
 
     private static String sign(String privateKey, SignArg arg, PackedTransaction t) {
