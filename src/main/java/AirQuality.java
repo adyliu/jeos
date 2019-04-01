@@ -43,11 +43,13 @@ public class AirQuality {
 //        List<AirQualityData> airQualityData = Arrays.asList(//
 //                new AirQualityData("4","监测点4","pm2.5数值","voc数值","碳数值","氮数值","硫数值","经度","纬度")//
 //        );
-        AirQualityData airQualityData =  new AirQualityData("4","监测点4","pm2.5数值","voc数值","碳数值","氮数值","硫数值","经度","纬度");
+        List<AirQualityData> airQualityData =  Arrays.asList(
+                new AirQualityData("17","监测点4","pm2.5数值","voc数值","碳数值","氮数值","硫数值","经度","纬度"),
+                new AirQualityData("18","监测点4","pm2.5数值","voc数值","碳数值","氮数值","硫数值","经度","纬度"));
 
-        Map<String, AirQualityData> airQualityDataList = new HashMap<>(4);
+        Map<String, List<AirQualityData>> airQualityDataList = new HashMap<>(4);
         airQualityDataList.put("airquality", airQualityData);
-        AbiJsonToBin data = client.abiJsonToBin("aqdapserver1", "writeonedata", airQualityDataList);
+        AbiJsonToBin data = client.abiJsonToBin("aqdapserver1", "writeairdata", airQualityDataList);
         System.out.println("bin= " + data.getBinargs());
 
         // ② get the latest block info
@@ -59,7 +61,7 @@ public class AirQuality {
 
         // ④ build the all actions
         List<TransactionAction> actions = Arrays.asList(//
-                new TransactionAction("aqdapserver1", "writeonedata", authorizations, data.getBinargs())//
+                new TransactionAction("aqdapserver1", "writeairdata", authorizations, data.getBinargs())//
         );
 
         // ⑤ build the packed transaction
@@ -83,8 +85,10 @@ public class AirQuality {
     }
 
     public static void main(String[] args) throws Exception {
-        //BasicConfigurator.configure();
-        writeAirData();
+        //数据上链接口
+        //writeAirData();
+        //数据读取接口
+        getResult();
     }
 
     private static String sign(String privateKey, SignArg arg, PackedTransaction t) {
@@ -93,6 +97,13 @@ public class AirQuality {
         raw.pack(ByteBuffer.allocate(33).array());// TODO: what's this?
         String hash = KeyUtil.signHash(privateKey, raw.bytes());
         return hash;
+    }
+
+    private static void getResult() {
+        EosApi eosApi = EosApiFactory.create("http://jungle2.cryptolions.io:80");
+        TableRow result = eosApi.getTableRows("aqdapserver1","aqdapserver1","airquality",
+                "8","9", "10");
+        System.out.println(result.getRows());
     }
 
 }
