@@ -44,8 +44,8 @@ public class AirQuality {
 //                new AirQualityData("4","监测点4","pm2.5数值","voc数值","碳数值","氮数值","硫数值","经度","纬度")//
 //        );
         List<AirQualityData> airQualityData =  Arrays.asList(
-                new AirQualityData("17","监测点4","pm2.5数值","voc数值","碳数值","氮数值","硫数值","经度","纬度"),
-                new AirQualityData("18","监测点4","pm2.5数值","voc数值","碳数值","氮数值","硫数值","经度","纬度"));
+                new AirQualityData("数据类型1","监测点4","pm2.5数值","voc数值","碳数值","氮数值","硫数值","经度","纬度"),
+                new AirQualityData("数据类型2","监测点4","pm2.5数值","voc数值","碳数值","氮数值","硫数值","经度","纬度"));
 
         Map<String, List<AirQualityData>> airQualityDataList = new HashMap<>(4);
         airQualityDataList.put("airquality", airQualityData);
@@ -86,7 +86,7 @@ public class AirQuality {
 
     public static void main(String[] args) throws Exception {
         //数据上链接口
-        //writeAirData();
+        writeAirData();
         //数据读取接口
         getResult();
     }
@@ -102,7 +102,7 @@ public class AirQuality {
     private static void getResult() {
         EosApi eosApi = EosApiFactory.create("http://jungle2.cryptolions.io:80");
         TableRow result = eosApi.getTableRows("aqdapserver1","aqdapserver1","airquality",
-                "8","9", "10");
+                "","", "10");
         System.out.println(result.getRows());
     }
 

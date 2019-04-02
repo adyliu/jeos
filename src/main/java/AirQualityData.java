@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AirQualityData {
-    private String air_id;
+    private String air_data_type;
     private String air_place;
     private String air_pm2_5;
     private String air_voc;
