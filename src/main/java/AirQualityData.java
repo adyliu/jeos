@@ -16,4 +16,5 @@ public class AirQualityData {
     private String air_sulfur;
     private String air_longitude;
     private String air_latitude;
+    private String air_air_quality;
 }
