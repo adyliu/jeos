@@ -52,10 +52,22 @@ public class EosApiRestClientImpl implements EosApi {
         eosHistoryApiService = EosApiServiceGenerator.createService(EosHistoryApiService.class, baseUrl);
     }
 
+    public EosApiRestClientImpl(String baseUrl, String bearerToken){
+        eosWalletApiService = EosApiServiceGenerator.createService(EosWalletApiService.class, baseUrl, bearerToken);
+        eosChainApiService = EosApiServiceGenerator.createService(EosChainApiService.class, baseUrl, bearerToken);
+        eosHistoryApiService = EosApiServiceGenerator.createService(EosHistoryApiService.class, baseUrl, bearerToken);
+    }
+
     public EosApiRestClientImpl(String walletBaseUrl, String chainBaseUrl, String historyBaseUrl){
         eosWalletApiService = EosApiServiceGenerator.createService(EosWalletApiService.class, walletBaseUrl);
         eosChainApiService = EosApiServiceGenerator.createService(EosChainApiService.class, chainBaseUrl);
         eosHistoryApiService = EosApiServiceGenerator.createService(EosHistoryApiService.class, historyBaseUrl);
+    }
+
+    public EosApiRestClientImpl(String walletBaseUrl, String chainBaseUrl, String historyBaseUrl, String bearerToken){
+        eosWalletApiService = EosApiServiceGenerator.createService(EosWalletApiService.class, walletBaseUrl, bearerToken);
+        eosChainApiService = EosApiServiceGenerator.createService(EosChainApiService.class, chainBaseUrl, bearerToken);
+        eosHistoryApiService = EosApiServiceGenerator.createService(EosHistoryApiService.class, historyBaseUrl, bearerToken);
     }
 
     @Override

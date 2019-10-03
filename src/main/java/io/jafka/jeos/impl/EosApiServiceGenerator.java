@@ -11,7 +11,9 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import io.jafka.jeos.exception.EosApiError;
 import io.jafka.jeos.exception.EosApiErrorCode;
 import io.jafka.jeos.exception.EosApiException;
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -42,6 +44,29 @@ public class EosApiServiceGenerator {
         Retrofit.Builder builder = new Retrofit.Builder();
         builder.baseUrl(baseUrl);
         builder.client(httpClient);
+        builder.addConverterFactory(JacksonConverterFactory.create(mapper));
+        retrofit = builder.build();
+
+        return retrofit.create(serviceClass);
+    }
+
+    public static <S> S createService(Class<S> serviceClass, String baseUrl, String bearerToken) {
+    	OkHttpClient httpClientWithToken = new OkHttpClient.Builder()
+    			.addInterceptor(new Interceptor() {
+    			      @Override
+    			      public okhttp3.Response intercept(Chain chain) throws IOException {
+    			        Request newRequest  = chain.request().newBuilder()
+    			            .addHeader("Authorization", "Bearer " + bearerToken)
+    			            .build();
+    			        return chain.proceed(newRequest);
+    			      }
+    			    })
+    			.addInterceptor(new LoggingInterceptor())
+    			.build();
+    	
+        Retrofit.Builder builder = new Retrofit.Builder();
+        builder.baseUrl(baseUrl);
+        builder.client(httpClientWithToken);
         builder.addConverterFactory(JacksonConverterFactory.create(mapper));
         retrofit = builder.build();
 
