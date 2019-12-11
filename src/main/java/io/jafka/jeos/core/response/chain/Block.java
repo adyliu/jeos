@@ -31,7 +31,7 @@ public class Block {
 
     private Transaction[] transactions;
 
-    private String[] headerExtensions;
+    private Object[] headerExtensions;
 
-    private String[] blockExtensions;
+    private Object[] blockExtensions;
 }
