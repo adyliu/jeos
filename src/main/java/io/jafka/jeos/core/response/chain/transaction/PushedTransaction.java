@@ -9,5 +9,9 @@ public class PushedTransaction {
 
     private Processed processed;
     private String transactionId;
+    public String getTransactionId()
+    {
+        return transactionId;
+    }
 
 }

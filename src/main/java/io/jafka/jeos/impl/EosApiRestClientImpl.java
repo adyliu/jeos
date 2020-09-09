@@ -96,12 +96,15 @@ public class EosApiRestClientImpl implements EosApi {
     }
 
     @Override
-    public TableRow getTableRows(String scope, String code, String table){
+    public TableRow getTableRows(String scope, String code, String table, String lower_bound, String upper_bound, String limit){
         LinkedHashMap<String, String> requestParameters = new LinkedHashMap<>(7);
 
         requestParameters.put("scope", scope);
         requestParameters.put("code", code);
         requestParameters.put("table", table);
+        requestParameters.put("lower_bound", lower_bound);
+        requestParameters.put("upper_bound", upper_bound);
+        requestParameters.put("limit", limit);
         requestParameters.put("json", "true");
 
         return EosApiServiceGenerator.executeSync(eosChainApiService.getTableRows(requestParameters));
