@@ -1,8 +1,8 @@
 package io.jafka.jeos.core.common;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 //TODO
 public class ActionTrace {
@@ -22,6 +22,8 @@ public class ActionTrace {
     private Integer totalCpuUsage;
 
     private String trxId;
+    
+    private Object returnValueData;
 
     public Action getAct() {
         return act;
@@ -93,6 +95,15 @@ public class ActionTrace {
     @JsonProperty("trx_id")
     public void setTrxId(String trxId) {
         this.trxId = trxId;
+    }
+    
+    public Object getReturnValueData() {
+        return returnValueData;
+    }
+
+    @JsonProperty("return_value_data")
+    public void setReturnValueData(Object returnValueData) {
+        this.returnValueData = returnValueData;
     }
 
 }
