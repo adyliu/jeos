@@ -3,7 +3,6 @@ package io.jafka.jeos.core.response.chain.transaction;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.jafka.jeos.core.common.ActionTrace;
 import lombok.Data;
@@ -19,6 +18,7 @@ public class Processed {
     private Long netUsage;
     private Receipt receipt;
     private Boolean scheduled;
+    private Long blockNum;
     
 /*    
     private List<String> deferredTransactionRequests;
